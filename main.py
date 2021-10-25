@@ -7,10 +7,8 @@ import numpy as np
 import random
 
 def showGraph(generator, array, args=None, algoName='professional sorting algorythm', datasetName='Random'):
-    if args is not None:
-        generator = generator(array, *args)
-    else:
-        generator = generator(array)
+    if args is not None: generator = generator(array, *args)
+    else: generator = generator(array)
     mp.use('Qt5Agg')
     plt.style.use('fivethirtyeight')
     data_normalizer = mp.colors.Normalize()
@@ -26,13 +24,10 @@ def showGraph(generator, array, args=None, algoName='professional sorting algory
         }
     )
     fig, ax = plt.subplots()
-    bar_rects = ax.bar(range(len(array)), array, align="edge",
-                       color=color_map(data_normalizer(range(len(array)))))
+    bar_rects = ax.bar(range(len(array)), array, align="edge", color=color_map(data_normalizer(range(len(array)))))
     ax.set_xlim(0, len(array))
     ax.set_ylim(0, int(1.1 * len(array)))
-    ax.set_title("ALGORITHM : " + algoName + "\n" + "DATA SET : " +
-                 datasetName, fontdict={'fontsize': 13, 'fontweight':
-        'medium', 'color': '#E4365D'})
+    ax.set_title("ALGORITHM : " + algoName + "\n" + "DATA SET : " + datasetName, fontdict={'fontsize': 13, 'fontweight':'medium', 'color': '#E4365D'})
     text = ax.text(0.01, 0.95, "", transform=ax.transAxes, color="#E4365D")
     iteration = [0]
 
@@ -45,7 +40,7 @@ def showGraph(generator, array, args=None, algoName='professional sorting algory
     _ = FuncAnimation(fig, func=animate, fargs=(bar_rects, iteration), frames=generator, interval=50, repeat=False)
     plt.show()
 
-def faul_pelz_sort(array):
+def faulpelz_sort(array):
     """
     Faulpelz sort takes inspiration from the developer itself and the world he lives in.
     Its time complexity i the first of a kind being only O(1).
@@ -57,7 +52,6 @@ def faul_pelz_sort(array):
     """
     yield array
     import requests
-
     data = {
         "operation": "alpha",
         "outseperator": ",",
@@ -65,10 +59,55 @@ def faul_pelz_sort(array):
         "sessionid": "m",
         "usertext": numpy.array2string(array, separator=',')
     }
-
     response = requests.post("https://sortmylist.com/alphabetize", data=data)
     rtext = response.text.replace('[', '').replace(']', '').replace(' ', '').replace('\n', '')
     yield np.fromstring(rtext, dtype=int, sep=',')
+
+def menga_sort(array):
+    """
+    MengaSort is inspired by "Menga" being comically small, and therefore searches for the smallest Object in an array
+    to move to the current spot, while iterating through an array.
+    Its time complexity equals O(n**2)
+    """
+    n = len(array)
+    for i in range(n):
+        for j in range(i, n):
+            if array[j] < array[i]:
+                array[i], array[j] = array[j], array[i]
+            yield array
+
+def quick_sort(array, lowest=None, highest=None):
+    """
+    QuickSort is quick.
+    Its average time complexity equals O(n*log(n))
+    """
+    if lowest==None: lowest = 0
+    if highest==None: highest = len(array)-1
+    if lowest >= highest:
+        return
+    x = array[lowest]
+    j = lowest
+    for i in range(lowest + 1, highest + 1):
+        if array[i] <= x:
+            j += 1
+            array[j], array[i] = array[i], array[j]
+        yield array
+    array[lowest], array[j] = array[j], array[lowest]
+    yield array
+    yield from quick_sort(array, lowest, j - 1)
+    yield from quick_sort(array, j + 1, highest)
+
+def bubble_sort(array):
+    """
+    BubbleSort hehe funny bubbles.
+    Its time complexity equals O(n**2)
+    """
+    n = len(array)
+    for i in range(n-1):
+        for j in range(n-i-1):
+            if(array[j] > array[j+1]):
+                array[j], array[j+1] = array[j+1], array[j]
+            yield array
 
 array = np.array(random.sample(range(0, 50), 50))
 showGraph(generator=faul_pelz_sort, array=array, algoName='Faulpelz Sort', datasetName='Random')
