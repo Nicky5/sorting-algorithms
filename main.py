@@ -1,28 +1,16 @@
 import matplotlib.pyplot as plt
+import numpy
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import axes3d
 import matplotlib as mp
 import numpy as np
 import random
 
-def quicksort(array, lowest, highest):
-    if lowest >= highest:
-        return
-    x = array[lowest]
-    j = lowest
-    for i in range(lowest + 1, highest + 1):
-        if array[i] <= x:
-            j += 1
-            array[j], array[i] = array[i], array[j]
-        yield array
-    array[lowest], array[j] = array[j], array[lowest]
-    yield array
-
-    yield from quicksort(array, lowest, j - 1)
-    yield from quicksort(array, j + 1, highest)
-
 def showGraph(generator, array, args=None, algoName='professional sorting algorythm', datasetName='Random'):
-    generator = generator(array, *args)
+    if args is not None:
+        generator = generator(array, *args)
+    else:
+        generator = generator(array)
     mp.use('Qt5Agg')
     plt.style.use('fivethirtyeight')
     data_normalizer = mp.colors.Normalize()
@@ -57,5 +45,30 @@ def showGraph(generator, array, args=None, algoName='professional sorting algory
     _ = FuncAnimation(fig, func=animate, fargs=(bar_rects, iteration), frames=generator, interval=50, repeat=False)
     plt.show()
 
+def faul_pelz_sort(array):
+    """
+    Faulpelz sort takes inspiration from the developer itself and the world he lives in.
+    Its time complexity i the first of a kind being only O(1).
+    The concept is a ver innovative algorythm developed around elementary school named 'orbeit af die ondren schiabm'.
+    It is always a good time to use the faulpelz sorting algorythm as it gives a satifing feeling of having avoided your problems.
+    The only issue is it relies on the external website to be online and reliable.
+    :param array: input array
+    :return: sorted array
+    """
+    yield array
+    import requests
+
+    data = {
+        "operation": "alpha",
+        "outseperator": ",",
+        "seperator": ",",
+        "sessionid": "m",
+        "usertext": numpy.array2string(array, separator=',')
+    }
+
+    response = requests.post("https://sortmylist.com/alphabetize", data=data)
+    rtext = response.text.replace('[', '').replace(']', '').replace(' ', '').replace('\n', '')
+    yield np.fromstring(rtext, dtype=int, sep=',')
+
 array = np.array(random.sample(range(0, 50), 50))
-showGraph(generator=quicksort, array=array, args=[0, len(array) - 1], algoName='Quick Sort', datasetName='Random')
+showGraph(generator=faul_pelz_sort, array=array, algoName='Faulpelz Sort', datasetName='Random')
