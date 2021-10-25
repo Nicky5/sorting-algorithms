@@ -33,7 +33,7 @@ def showGraph(generator, array, args=None, algoName='professional sorting algory
     ax.set_xlim(0, len(array))
     ax.set_ylim(0, int(1.1 * len(array)))
     ax.set_title("ALGORITHM : " + algoName + "\n" + "DATA SET : " + datasetName, fontdict={'fontsize': 13, 'fontweight':'medium', 'color': '#E4365D'})
-    #text = ax.text(0.01, 0.95, "", transform=ax.transAxes, color="#E4365D")
+    text = ax.text(0.01, 0.95, "", transform=ax.transAxes, color="#E4365D")
     iteration = [0]
 
     def animate(A, rects, iteration):
@@ -51,9 +51,9 @@ def faulpelz_sort(array):
     Its time complexity i the first of a kind being only O(1).
     The concept is a ver innovative algorythm developed around elementary school named 'orbeit af die ondren schiabm'.
     It is always a good time to use the faulpelz sorting algorythm as it gives a satifing feeling of having avoided your problems.
-    The only issue is it relies on the external website to be online and reliable.
+    The only issue is it relies on the external website to be online and reliable. Just like the original algorythm
     :param array: input array
-    :return: sorted array
+    :return: magic (∩｀-´)⊃━☆ﾟ.*･｡ﾟ
     """
     yield array
     import requests
@@ -114,6 +114,9 @@ def bubble_sort(arr):
             yield arr
 
 def insertion_sort(arr):
+    """
+    inserts he right item in the right spot at the right time. How organized :`)
+    """
     for i in range(1, len(arr)):
         key = arr[i]
         j = i - 1
@@ -124,6 +127,9 @@ def insertion_sort(arr):
         arr[j + 1] = key
 
 def heap_sort(arr):
+    """
+    Holy Eraser Apprension Portal
+    """
     def heapify(arr, n, i):
         largest = i  # Initialize largest as root
         l = 2 * i + 1  # left = 2*i + 1
@@ -154,6 +160,9 @@ def heap_sort(arr):
         yield arr
 
 def selection_sort(arr):
+    """
+    Picks the right opportunities at the right time.
+    """
     for i in range(len(arr)):
         # Find the minimum element in remaining
         # unsorted array
@@ -168,6 +177,9 @@ def selection_sort(arr):
         yield arr
 
 def merge_sort(arr, l=None, r=None):
+    """
+    cool spike patterns
+    """
     def merge(arr, l, m, r):
         n1 = m - l + 1
         n2 = r - m
@@ -221,6 +233,121 @@ def merge_sort(arr, l=None, r=None):
         yield from merge_sort(arr, m + 1, r)
         yield from merge(arr, l, m, r)
 
+def cocktail_sort(array):
+    """
+    cocktail sort is a sorting algorythm based on bubblesort. The diffrence is that it's twoway and gradually gathers all unsorted items to the middle.
+    """
+    n = len(array)
+    swapped = True
+    start = 0
+    end = n - 1
+    while (swapped == True):
+        swapped = False
+
+        for i in range(start, end):
+            if (array[i] > array[i + 1]):
+                array[i], array[i + 1] = array[i + 1], array[i]
+                swapped = True
+                yield array
+        if (swapped == False):
+            break
+        swapped = False
+        end = end - 1
+        for i in range(end - 1, start - 1, -1):
+            if (array[i] > array[i + 1]):
+                array[i], array[i + 1] = array[i + 1], array[i]
+                swapped = True
+                yield array
+        start = start + 1
+    yield array
+
+def shell_sort(arr):
+    """
+    flattens the curve
+    """
+    gap = len(arr) // 2
+    while gap > 0:
+        i = 0
+        j = gap
+        while j < len(arr):
+            if arr[i] > arr[j]:
+                arr[i], arr[j] = arr[j], arr[i]
+            i += 1
+            j += 1
+            k = i
+            while k - gap > -1:
+                if arr[k - gap] > arr[k]:
+                    arr[k - gap], arr[k] = arr[k], arr[k - gap]
+                    yield arr
+                k -= 1
+        gap //= 2
+
+def comb_sort(arr):
+    """
+    no honeycombs sadly
+    """
+    def getNextGap(gap):
+        gap = (gap * 10) // 13
+        if gap < 1:
+            return 1
+        return gap
+
+    n = len(arr)
+    gap = n
+    swapped = True
+    while gap != 1 or swapped == 1:
+        gap = getNextGap(gap)
+        swapped = False
+        for i in range(0, n - gap):
+            if arr[i] > arr[i + gap]:
+                arr[i], arr[i + gap] = arr[i + gap], arr[i]
+                swapped = True
+                yield arr
+
+def radix_sort(array):
+    """
+    EXTREMLY satifying. The original at least. This one is just buggy.
+    """
+    RADIX = 10
+    buckets = [[] for i in range(RADIX)]
+    maxLength = False
+    placement = 1
+    while not maxLength:
+        maxLength = True
+        for i in array:
+            tmp = i // placement
+            buckets[tmp % RADIX].append(i)
+            if maxLength and tmp > 0:
+                maxLength = False
+        a = 0
+        for bucket in buckets:
+            for i in bucket:
+                yield array
+                array[a] = i
+                yield array
+                a += 1
+            bucket.clear()
+        placement *= RADIX
+
+def gnome_sort(array):
+    """
+    based of a REAL gnome sorting plants. (omg computer scientist gnome ∑(ﾟﾛﾟ〃) )
+    :param array:
+    :return:
+    """
+    index = 0
+    n = len(array)
+    while index < n:
+        if index == 0:
+            index = index + 1
+        if array[index] >= array[index - 1]:
+            index = index + 1
+        else:
+            array[index], array[index - 1] = array[index - 1], array[index]
+            yield array
+            index = index - 1
+    yield array
+
 print("\ndisplay [SortingAlgorithm]\ntime [SortingAlgorithm]\n-i [show iterations count, off by default]\n"
       "-s [speed, 0 by default]]\n-d [dataset, random by default]]\n-l [dataset length, 50 by default]\n"
       "-r [dataset range, 50 by default]\n")
@@ -244,6 +371,8 @@ while run:
 
     array = np.array(random.sample(range(0, drange), dlength))
 
+    # please emil.
+    # there has to be a better way
     if command[0].lower() == "display":
         if command[1].lower() == "faulpelzsort" or command[1].lower() == "faulpelz_sort":
             showGraph(generator=faulpelz_sort, array=array, algoName='Faulpelz Sort', datasetName=dname, interval=dinterval)
@@ -261,7 +390,20 @@ while run:
             showGraph(generator=selection_sort, array=array, algoName='Selection Sort', datasetName=dname, interval=dinterval)
         elif command[1].lower() == "mergesort" or command[1].lower() == "merge_sort":
             showGraph(generator=merge_sort, array=array, algoName='Merge Sort', datasetName=dname, interval=dinterval)
+        elif command[1].lower() == "cocktailsort" or command[1].lower() == "cocktail_sort":
+            showGraph(generator=cocktail_sort, array=array, algoName='Cocktail Sort', datasetName=dname, interval=dinterval)
+        elif command[1].lower() == "shellsort" or command[1].lower() == "shell_sort":
+            showGraph(generator=shell_sort, array=array, algoName='Shell Sort', datasetName=dname, interval=dinterval)
+        elif command[1].lower() == "combsort" or command[1].lower() == "comb_sort":
+            showGraph(generator=comb_sort, array=array, algoName='Comb Sort', datasetName=dname, interval=dinterval)
+        elif command[1].lower() == "radixsort" or command[1].lower() == "radix_sort":
+            showGraph(generator=radix_sort, array=array, algoName='Radix Sort', datasetName=dname, interval=dinterval)
+        elif command[1].lower() == "gnomesort" or command[1].lower() == "gnome_sort":
+            showGraph(generator=gnome_sort, array=array, algoName='Gnome Sort', datasetName=dname, interval=dinterval)
+    # *adds some guanciale, EGGS*
+    # spaghetti code alla carbonara
 
+    # can't wait fo switch statemnt in python 3.10
     elif command[0] == "time":
         start = time.time()
         if command[1].lower() == "faulpelzsort" or command[1].lower() == "faulpelz_sort":
@@ -280,5 +422,15 @@ while run:
             selection_sort(array)
         elif command[1].lower() == "mergesort" or command[1].lower() == "merge_sort":
             merge_sort(array)
+        elif command[1].lower() == "cocktailsort" or command[1].lower() == "merge_sort":
+            cocktail_sort(array)
+        elif command[1].lower() == "shellsort" or command[1].lower() == "shell_sort":
+            shell_sort(array)
+        elif command[1].lower() == "combsort" or command[1].lower() == "comb_sort":
+            comb_sort(array)
+        elif command[1].lower() == "radixsort" or command[1].lower() == "radix_sort":
+            radix_sort(array)
+        elif command[1].lower() == "gnomesort" or command[1].lower() == "gnome_sort":
+            gnome_sort(array)
         end = time.time()
         print("Time: ", end - start)
