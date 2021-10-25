@@ -1,4 +1,3 @@
-# import all the modules
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.mplot3d import axes3d
@@ -6,40 +5,26 @@ import matplotlib as mp
 import numpy as np
 import random
 
-mp.use('Qt5Agg')
-
-# quicksort function
-def quicksort(a, l, r):
-    if l >= r:
+def quicksort(array, lowest, highest):
+    if lowest >= highest:
         return
-    x = a[l]
-    j = l
-    for i in range(l + 1, r + 1):
-        if a[i] <= x:
+    x = array[lowest]
+    j = lowest
+    for i in range(lowest + 1, highest + 1):
+        if array[i] <= x:
             j += 1
-            a[j], a[i] = a[i], a[j]
-        yield a
-    a[l], a[j] = a[j], a[l]
-    yield a
+            array[j], array[i] = array[i], array[j]
+        yield array
+    array[lowest], array[j] = array[j], array[lowest]
+    yield array
 
-    # yield from statement used to yield
-    # the array after dividing
-    yield from quicksort(a, l, j - 1)
-    yield from quicksort(a, j + 1, r)
+    yield from quicksort(array, lowest, j - 1)
+    yield from quicksort(array, j + 1, highest)
 
-# function to plot bars
-def showGraph():
-    # for random unique values
-    n = int(input("enter array size\n"))
-    a = [i for i in range(1, n + 1)]
-    random.shuffle(a)
-    datasetName = 'Random'
-    # generator object returned by the function
-    generator = quicksort(a, 0, n - 1)
-    algoName = 'Quick Sort'
-    # style of the chart
+def showGraph(generator, array, args=None, algoName='professional sorting algorythm', datasetName='Random'):
+    generator = generator(array, *args)
+    mp.use('Qt5Agg')
     plt.style.use('fivethirtyeight')
-    # set colors of the bars
     data_normalizer = mp.colors.Normalize()
     color_map = mp.colors.LinearSegmentedColormap(
         "my_map",
@@ -53,29 +38,24 @@ def showGraph():
         }
     )
     fig, ax = plt.subplots()
-    # bar container
-    bar_rects = ax.bar(range(len(a)), a, align="edge",
-                       color=color_map(data_normalizer(range(n))))
-    # setting the limits of x and y axes
-    ax.set_xlim(0, len(a))
-    ax.set_ylim(0, int(1.1 * len(a)))
+    bar_rects = ax.bar(range(len(array)), array, align="edge",
+                       color=color_map(data_normalizer(range(len(array)))))
+    ax.set_xlim(0, len(array))
+    ax.set_ylim(0, int(1.1 * len(array)))
     ax.set_title("ALGORITHM : " + algoName + "\n" + "DATA SET : " +
                  datasetName, fontdict={'fontsize': 13, 'fontweight':
-        'medium', 'color': '#E436  5D'})
-    # the text to be shown on the upper left indicating the number of iterations
-    # transform indicates the position with relevance to the axes coordinates.
+        'medium', 'color': '#E4365D'})
     text = ax.text(0.01, 0.95, "", transform=ax.transAxes, color="#E4365D")
     iteration = [0]
+
     def animate(A, rects, iteration):
         for rect, val in zip(rects, A):
-            # setting the size of each bar equal to the value of the elements
             rect.set_height(val)
         iteration[0] += 1
         text.set_text("iterations : {}".format(iteration[0]))
-    # call animate function repeatedly
-    anim = FuncAnimation(fig, func=animate,
-                         fargs=(bar_rects, iteration), frames=generator, interval=50,
-                         repeat=False)
+
+    _ = FuncAnimation(fig, func=animate, fargs=(bar_rects, iteration), frames=generator, interval=50, repeat=False)
     plt.show()
 
-showGraph()
+array = np.array(random.sample(range(0, 50), 50))
+showGraph(generator=quicksort, array=array, args=[0, len(array) - 1], algoName='Quick Sort', datasetName='Random')
