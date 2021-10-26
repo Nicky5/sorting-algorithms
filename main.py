@@ -13,7 +13,7 @@ keys = []
 names = []
 sorters = []
 
-def showGraph(generator, array, args=None, algoName='professional sorting algorythm', datasetName='Random', interval=50):
+def showGraph(generator, array, args=None, algoName='professional sorting algorythm', datasetName='Random', interval=50, display_iterations=False):
     if args is not None:
         generator = generator(array, *args)
     else:
@@ -44,7 +44,8 @@ def showGraph(generator, array, args=None, algoName='professional sorting algory
         for rect, val in zip(rects, A):
             rect.set_height(val)
         iteration[0] += 1
-        text.set_text("iterations : {}".format(iteration[0]))
+        if display_iterations:
+            text.set_text("iterations : {}".format(iteration[0]))
 
     _ = FuncAnimation(fig, func=animate, fargs=(bar_rects, iteration), frames=generator, interval=interval, repeat=False)
     plt.show()
@@ -406,6 +407,7 @@ while run:
     dlength = 50
     dinterval = 50
     dname = "random"
+    display_iterations = False
     for i in range(len(command)):
         if command[i] == "-d" and command[i + 1].lower() == "random":
             pass  # random is default
@@ -413,13 +415,15 @@ while run:
             dlength = int(command[i + 1])
         elif command[i] == "-r":
             drange = int(command[i + 1])
+        elif command[i] == "-i":
+            display_iterations = True
 
     array = np.array(random.sample(range(0, drange), dlength))
 
     for i in range(0, len(names)):
         if command[1].lower() in keys[i]:
             if command[0].lower() == "display":
-                showGraph(generator=sorters[i], array=array, algoName=names[i], datasetName=dname, interval=dinterval)
+                showGraph(generator=sorters[i], array=array, algoName=names[i], datasetName=dname, interval=dinterval, display_iterations=display_iterations)
             elif command[0].lower() == "time":
                 start = time.time()
                 for i in sorters[i](array):
