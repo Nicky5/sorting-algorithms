@@ -9,6 +9,10 @@ import numpy as np
 import random
 import time
 
+keys = []
+names = []
+sorters = []
+
 def showGraph(generator, array, args=None, algoName='professional sorting algorythm', datasetName='Random', interval=50):
     if args is not None:
         generator = generator(array, *args)
@@ -45,6 +49,8 @@ def showGraph(generator, array, args=None, algoName='professional sorting algory
     _ = FuncAnimation(fig, func=animate, fargs=(bar_rects, iteration), frames=generator, interval=interval, repeat=False)
     plt.show()
 
+keys.append(("faulpelzsort", "faulpelz_sort"))
+names.append("Faulpelz sort")
 def faulpelz_sort(array):
     """
     Faulpelz sort takes inspiration from the developer itself and the world he lives in.
@@ -67,7 +73,11 @@ def faulpelz_sort(array):
     response = requests.post("https://sortmylist.com/alphabetize", data=data)
     rtext = response.text.replace('[', '').replace(']', '').replace(' ', '').replace('\n', '')
     yield np.fromstring(rtext, dtype=int, sep=',')
+sorters.append(faulpelz_sort)
 
+
+keys.append(("mengasort", "menga_sort"))
+names.append("Menga sort")
 def menga_sort(arr):
     """
     MengaSort is inspired by "Menga" being comically small, and therefore searches for the smallest Object in an array
@@ -80,7 +90,11 @@ def menga_sort(arr):
             if arr[j] < arr[i]:
                 arr[i], arr[j] = arr[j], arr[i]
             yield arr
+sorters.append(menga_sort)
 
+
+keys.append(("quicksort", "quick_sort"))
+names.append("Quick sort")
 def quick_sort(array, low=None, high=None):
     """
     QuickSort is quick.
@@ -100,7 +114,10 @@ def quick_sort(array, low=None, high=None):
     array[low], array[j] = array[j], array[low]
     yield from quick_sort(array, low, j - 1)
     yield from quick_sort(array, j + 1, high)
+sorters.append(quick_sort)
 
+keys.append(("bubblesort", "bubble_sort"))
+names.append("Bubble sort")
 def bubble_sort(arr):
     """
     BubbleSort hehe funny bubbles.
@@ -112,7 +129,10 @@ def bubble_sort(arr):
             if(arr[j] > arr[j + 1]):
                 arr[j], arr[j + 1] = arr[j + 1], arr[j]
             yield arr
+sorters.append(bubble_sort)
 
+keys.append(("insertionsort", "insertion_sort"))
+names.append("Insrtion sort")
 def insertion_sort(arr):
     """
     inserts he right item in the right spot at the right time. How organized :`)
@@ -125,7 +145,10 @@ def insertion_sort(arr):
             j -= 1
             yield arr
         arr[j + 1] = key
+sorters.append(insertion_sort)
 
+keys.append(("heapsort", "heap_sort"))
+names.append("Heap sort")
 def heap_sort(arr):
     """
     Holy Eraser Apprension Portal
@@ -158,7 +181,10 @@ def heap_sort(arr):
         arr[i], arr[0] = arr[0], arr[i]  # swap
         heapify(arr, i, 0)
         yield arr
+sorters.append(heap_sort)
 
+keys.append(("selectionsort", "selection_sort"))
+names.append("Selection sort")
 def selection_sort(arr):
     """
     Picks the right opportunities at the right time.
@@ -175,7 +201,10 @@ def selection_sort(arr):
         # the first element
         arr[i], arr[min_idx] = arr[min_idx], arr[i]
         yield arr
+sorters.append(selection_sort)
 
+keys.append(("mergesort", "merge_sort"))
+names.append("Merge sort")
 def merge_sort(arr, l=None, r=None):
     """
     cool spike patterns
@@ -232,7 +261,10 @@ def merge_sort(arr, l=None, r=None):
         yield from merge_sort(arr, l, m)
         yield from merge_sort(arr, m + 1, r)
         yield from merge(arr, l, m, r)
+sorters.append(merge_sort)
 
+keys.append(("cocktailsort", "cocktail_sort"))
+names.append("Cocktail sort")
 def cocktail_sort(array):
     """
     cocktail sort is a sorting algorythm based on bubblesort. The diffrence is that it's twoway and gradually gathers all unsorted items to the middle.
@@ -260,7 +292,10 @@ def cocktail_sort(array):
                 yield array
         start = start + 1
     yield array
+sorters.append(cocktail_sort)
 
+keys.append(("shellsort", "shell_sort"))
+names.append("Shell sort")
 def shell_sort(arr):
     """
     flattens the curve
@@ -281,7 +316,10 @@ def shell_sort(arr):
                     yield arr
                 k -= 1
         gap //= 2
+sorters.append(shell_sort)
 
+keys.append(("combsort", "comb_sort"))
+names.append("Comb sort")
 def comb_sort(arr):
     """
     no honeycombs sadly
@@ -303,7 +341,10 @@ def comb_sort(arr):
                 arr[i], arr[i + gap] = arr[i + gap], arr[i]
                 swapped = True
                 yield arr
+sorters.append(comb_sort)
 
+keys.append(("radixsort", "radix_sort"))
+names.append("Radix sort")
 def radix_sort(array):
     """
     EXTREMLY satifying. The original at least. This one is just buggy.
@@ -328,7 +369,10 @@ def radix_sort(array):
                 a += 1
             bucket.clear()
         placement *= RADIX
+sorters.append(radix_sort)
 
+keys.append(("gnomesort", "gnome_sort"))
+names.append("Gnome sort")
 def gnome_sort(array):
     """
     based of a REAL gnome sorting plants. (omg computer scientist gnome ∑(ﾟﾛﾟ〃) )
@@ -347,6 +391,7 @@ def gnome_sort(array):
             yield array
             index = index - 1
     yield array
+sorters.append(gnome_sort)
 
 print("\ndisplay [SortingAlgorithm]\ntime [SortingAlgorithm]\n-i [show iterations count, off by default]\n"
       "-s [speed, 0 by default]]\n-d [dataset, random by default]]\n-l [dataset length, 50 by default]\n"
@@ -371,6 +416,25 @@ while run:
 
     array = np.array(random.sample(range(0, drange), dlength))
 
+    for i in range(0, len(names)):
+        if command[1].lower() in keys[i]:
+            if command[0].lower() == "display":
+                showGraph(generator=sorters[i], array=array, algoName='Faulpelz Sort', datasetName=dname, interval=dinterval)
+            elif command[0].lower() == "time":
+                start = time.time()
+                for i in sorters[i](array):
+                    pass
+                end = time.time()
+                print("Time: ", end - start)
+            else:
+                raise Exception("input syntax error")
+            break
+        if i == len(keys) - 1:
+            raise Exception("uknown algorythm")
+
+# 26.10.2021 09:36:17
+# emil gib dir wia viel besser des isch
+"""
     # please emil.
     # there has to be a better way
     if command[0].lower() == "display":
@@ -434,3 +498,4 @@ while run:
             gnome_sort(array)
         end = time.time()
         print("Time: ", end - start)
+"""
