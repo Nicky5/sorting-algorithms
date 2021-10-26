@@ -419,7 +419,7 @@ while run:
     for i in range(0, len(names)):
         if command[1].lower() in keys[i]:
             if command[0].lower() == "display":
-                showGraph(generator=sorters[i], array=array, algoName='Faulpelz Sort', datasetName=dname, interval=dinterval)
+                showGraph(generator=sorters[i], array=array, algoName=names[i], datasetName=dname, interval=dinterval)
             elif command[0].lower() == "time":
                 start = time.time()
                 for i in sorters[i](array):
